@@ -1,7 +1,7 @@
 import cv2 
 from image_processing import  getContourByColor, getCard, flipCard, detectText, addCard, colors_
   
-vid = cv2.VideoCapture(1)
+vid = cv2.VideoCapture(0) 
 last_color = None
 i = 0
 card = None
