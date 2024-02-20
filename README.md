@@ -14,10 +14,6 @@ MacOs/Linux: ``source venv/bin/activate``
 
 Win: ``venv\Scripts\activate``
 
-#### Install requirements
-
-``pip install -r requirements.txt``
-
 ## Calibration
 to calibrate colors for your camera add your "calibration_image.png" (calibration image must contain card of red, green, blue, yellow and violet cards) to images/camera.
 
