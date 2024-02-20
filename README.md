@@ -19,7 +19,7 @@ to calibrate colors for your camera add your "calibration_image.png" (calibratio
 
 Example of calibration image:
 
-![calibration_image](RMimages/calibration_image.png){: height="400px"}
+![calibration_image](RMimages/calibration_image.png)
 
 ``python3 calibration.py camera``
 
@@ -29,7 +29,7 @@ or you can test on prepared image
 
 Example calibration for blue color:
 
-![calibration_blue](RMimages/calibration_blue.png){: height="400px"}
+![calibration_blue](RMimages/calibration_blue.png)
 
 
 ## Example of usage
@@ -53,8 +53,8 @@ text will be printed in terminal
 
 you can see the other images in `results`
 
-![calibration_blue](RMimages/red_result.png){: height="400px"}
+![calibration_blue](RMimages/red_result.png)
 
-![calibration_blue](RMimages/text.png){: height="400px"}
+![calibration_blue](RMimages/text.png)
 
 
