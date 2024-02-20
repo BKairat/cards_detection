@@ -40,28 +40,36 @@ def getContourByColor(image: np.array, color: str, masks_json: str="masks_test.j
 
     CONTOURS, _  = cv2.findContours(THRESH.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     
-    cntr = max(CONTOURS, key = lambda x: cv2.contourArea(x))   
+    if CONTOURS:
+        cntr = max(CONTOURS, key = lambda x: cv2.contourArea(x)) 
+    else:
+        return None, 0
     
     cntr = cv2.convexHull(cntr)
     cntr = simplifyContour(cntr)
-    x, y, _ = image.shape
+    x_i, y_i, _ = image.shape
+    middle = np.mean(cntr, axis=0)
     image_corners = [
-        (x, 0),
+        (y_i, 0),
         (0, 0),
-        (0, y),
-        (x, y)
+        (0, x_i),
+        (y_i, x_i)
         ]
-    pos = image_corners.index(max(image_corners, key=lambda x: np.linalg.norm(cntr-x)))+1
+    pos = image_corners.index(max(image_corners, key=lambda x: np.linalg.norm(middle-x)))+1
     if show:
         cv2.drawContours(image, [cntr], -1, (0, 255, 0), 2)
         cv2.imshow("Contours", image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+    if cv2.contourArea(cntr)<10000:
+        return None, 0
     return cntr, pos
     
     
 def getCard(image: np.array, contour: np.array, show=False)->np.array:
     x, y, _ = image.shape
+    if contour.shape[0] != 4:
+        return None
     pts1 = sortPointsOfContourForAT(contour)
     pts2 = np.float32([[[20, 20]], [[250, 20]], [[20, 150]]])
     M = cv2.getAffineTransform(pts1,pts2)
@@ -71,7 +79,7 @@ def getCard(image: np.array, contour: np.array, show=False)->np.array:
         cv2.imshow("Card", dst)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-    return dst
+    return [dst]
 
 
 def addCard(image: np.array, card: np.array, color: tuple, qarter: int, show: bool=False)->np.array:
@@ -107,10 +115,19 @@ def addCard(image: np.array, card: np.array, color: tuple, qarter: int, show: bo
     return ret 
     
     
-def detectText(image: np.array) -> np.array:
+def detectText(image: np.array) -> str:
     reader = easyocr.Reader(['en'], gpu=False)
     text = reader.readtext(image)
-    print(max(text, key = lambda x: x[-1])[1])
+    ret = None
+    if text:
+        ret = max(text, key = lambda x: x[-1])
+        if ret[-1] > 0.8:
+            print(f"-----------detected text:-----------\n{ret[1]}\n------------------------------------")
+            return ret[1]
+        else: 
+            ret = None
+    print(f"------------------------------------\ncould not detect text\n------------------------------------")
+    return ret
     
 
 def flipCard(card: np.array) -> np.array:
@@ -148,7 +165,7 @@ colors_ = {
     "green": (0,255,0), 
     "blue": (255,0,0), 
     "yellow": (0,200,255), 
-    "violet": (255,0,100)
+    "violet": (255,0,150)
 }
 
 if __name__ == "__main__":
@@ -156,7 +173,7 @@ if __name__ == "__main__":
         image = cv2.imread(f"images/test/{color}.png")
         contour, pos = getContourByColor(image, color)
         card = getCard(image, contour)
-        card = flipCard(card)
+        card = flipCard(card[0])
         # detectText(card)
         addCard(image, card, colors_[color], pos, 1)
     
