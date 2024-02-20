@@ -121,7 +121,7 @@ def detectText(image: np.array) -> str:
     ret = None
     if text:
         ret = max(text, key = lambda x: x[-1])
-        if ret[-1] > 0.8:
+        if ret[-1] > 0.6:
             print(f"-----------detected text:-----------\n{ret[1]}\n------------------------------------")
             return ret[1]
         else: 

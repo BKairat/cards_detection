@@ -33,8 +33,11 @@ while (True):
 
                     detectText(card_flipped)
         cv2.imshow('frame', image)
-        cv2.waitKey(0)
+        key = cv2.waitKey(0)
 
+        if key == ord('s'):
+            cv2.imwrite("test.png", image) 
+            print("image saved")
     cv2.imshow('frame', image)
     
 vid.release() 

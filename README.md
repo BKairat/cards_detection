@@ -57,4 +57,33 @@ you can see the other images in `results`
 
 ![calibration_blue](RMimages/text.png)
 
+## How it works
+
+The resulting image is converted to HSV format and the outline of the card is determined by color:
+
+![contours](RMimages/contours.png)
+
+It is assumed that the colors have been correctly calibrated so the larger outline will belong to the card:
+
+![biggest_contour](RMimages/biggest_contour.png)
+
+After that we approximate the contour to a convex one and then to a quadrilateral:
+
+![simplified](RMimages/simplified.png)
+
+Then the card is aligned using an affine transformation
+
+![card](RMimages/card.png)
+
+Using the Canny algorithm, we determine the contours on the card, and depending on which corners have the fewest contours, we reflect the card horizontally and vertically:
+
+![edges](RMimages/edges.png)
+
+Final result:
+
+![edges](RMimages/result.png)
+
+the text on the card is determined using the ``easyocr`` library, and displayed is score is higher then 0.6 
+
+![edges](RMimages/text_blue.png)
 
